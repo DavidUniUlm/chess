@@ -38,6 +38,12 @@ public class Brain {
             boolean legalMove = board.checkLegalMove(previousClick, square);
             if (legalMove) {
                 board.move(previousClick, square);
+                for (Piece pieceOnBoard : board.getAllPieces()) {
+                    if ((board.isWhitesTurn() && pieceOnBoard.isWhite())
+                            || (!board.isWhitesTurn() && !pieceOnBoard.isWhite())) {
+                        pieceOnBoard.removeIllegalMoves();
+                    }
+                }
                 chessGuiController.showMoves(board.getMoves());
                 chessGuiController.resetColors();
                 chessGuiController.colorSquare(previousClick, color);

@@ -1,5 +1,7 @@
 package model;
 
+import com.google.gson.Gson;
+import com.rits.cloning.Cloner;
 import javafx.geometry.Point2D;
 import model.pieces.*;
 import view.SpecialMove;
@@ -7,7 +9,7 @@ import view.Type;
 
 import java.util.ArrayList;
 
-public class Board implements Cloneable {
+public class Board {
 
     private Piece[][] chessBoard = new Piece[8][8];
     private boolean whitesTurn = true;
@@ -19,17 +21,47 @@ public class Board implements Cloneable {
     private boolean blackCastlingLong;
     private String enPassant = "-";
 
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Board board = (Board) super.clone();
-        board.chessBoard = board.chessBoard.clone();
-        board.allPieces = new ArrayList<>(board.allPieces);
-        //allPieces.forEach(x -> x = x.clone());
-        return board;
+//    @Override
+//    public Object clone() throws CloneNotSupportedException {
+//        Board board = (Board) super.clone();
+//        board.chessBoard = board.chessBoard.clone();
+//        board.allPieces = new ArrayList<>(board.allPieces);
+//        //allPieces.forEach(x -> x = x.clone());
+//        return board;
+//    }
+
+
+//    @Override
+//    public Object clone() throws CloneNotSupportedException {
+//        Board clonedBoard = (Board)super.clone();
+//        clonedBoard.chessBoard = this.chessBoard.clone();
+//        return clonedBoard;
+//    }
+
+
+    public Object clone() {
+//        Gson gson = new Gson();
+////        String serialized = gson.toJson(this);
+////        Board boardCopy = gson.fromJson(serialized, Board.class);
+////        return boardCopy;
+        Cloner cloner = new Cloner();
+        Board boardCopy = cloner.deepClone(this);
+        return boardCopy;
     }
 
-    public static void checkForCheck(Piece[][] chessBoard){
 
+    public boolean checkForCheck() {
+        King king = (King) (whitesTurn ? getKing(false) : getKing(true));
+        for (Piece piece : allPieces) {
+            for (Point2D legalMove : piece.getLegalMoves()) {
+//                System.out.println(legalMove);
+//                System.out.println("king.getPosition(): " + king.getPosition());
+                if (legalMove.equals(king.getPosition())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -99,7 +131,7 @@ public class Board implements Cloneable {
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
                 Piece piece = getPiece(r, c);
-                if(piece == null){
+                if (piece == null) {
                     continue;
                 }
                 if (white) {

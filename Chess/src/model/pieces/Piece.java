@@ -1,5 +1,6 @@
 package model.pieces;
 
+import com.google.gson.Gson;
 import javafx.geometry.Point2D;
 import model.Board;
 import model.Move;
@@ -21,16 +22,20 @@ public abstract class Piece {
     public Piece() {
     }
 
-    public void removeIllegalMoves(){
-//        newlegalmoves
-//        saveFen..
-//        for legalMoves ...
-//            board.move...
-//            board.checkForCheck...
-//            insert into newlegalmoves oder nicht..
-//            resetBoard..
-//        legalmoves = newlegalmoves
+    public void removeIllegalMoves() {
+        ArrayList<Point2D> legalMovesChessChecked = new ArrayList<>();
+        //String fen = board.getPosition();
+        for (Point2D legalMove : legalMoves) {
+            Board clonedBoard = (Board)board.clone();
+            clonedBoard.move(getPosition(), legalMove);
+            if (!clonedBoard.checkForCheck()) {
+                legalMovesChessChecked.add(legalMove);
+            }
+            //board.setPosition(fen);
+        }
+        legalMoves = legalMovesChessChecked;
     }
+
 
     public Piece(Point2D position, boolean white, Board board) {
         this.position = position;
@@ -43,52 +48,37 @@ public abstract class Piece {
      */
     public abstract void calculateLegalMoves();
 
-    public void calculateLegalMovesAndCheckForChess() {
-        calculateLegalMoves();
-        if (legalMoves.size() == 0) {
-            return;
-        }
-        ArrayList<Point2D> realLegalMoves = new ArrayList<>();
-        for (Point2D legalMove : legalMoves) {
-            System.out.println("LegalMove: " + legalMove);
-            if (!moveIntoCheck(new Move(getPosition(), legalMove))) {
-                realLegalMoves.add(legalMove);
-                System.out.println("realLegalMove: " + legalMove);
-            }
-        }
-        legalMoves = realLegalMoves;
-    }
 
-    /**
-     * checks if a move is illegal because king could be taken by opponent
-     *
-     * @param move the move to be checked
-     * @return true if player moves into check (illegal), false if move is legal
-     */
-    public boolean moveIntoCheck(Move move) {
-        try {
-            Board boardCopy = (Board) board.clone();
-            boardCopy.move(move.getStart(), move.getDestination());
-            System.out.println("board: " + board);
-            System.out.println("boardCopy: " +boardCopy);
-            System.out.println("board piece: " + board.getPiece(2,2));
-            System.out.println("boardCopy piece: " + boardCopy.getPiece(2,2));
-            for (Piece piece : boardCopy.getAllPieces()) {
-                piece.calculateLegalMoves();
-                for (Point2D destination : legalMoves) {
-                    System.out.println(boardCopy.isWhitesTurn());
-                    System.out.println(boardCopy.getKing(!boardCopy.isWhitesTurn()).getType());
-                    if (destination.equals(boardCopy.getKing(!boardCopy.isWhitesTurn()))) {
-                        return true;
-                    }
-                }
-            }
-        } catch (CloneNotSupportedException e) {
-            System.out.println("das war wohl nix");
-            e.printStackTrace();
-        }
-        return false;
-    }
+//    /**
+//     * checks if a move is illegal because king could be taken by opponent
+//     *
+//     * @param move the move to be checked
+//     * @return true if player moves into check (illegal), false if move is legal
+//     */
+//    public boolean moveIntoCheck(Move move) {
+//        try {
+//            Board boardCopy = (Board) board.clone();
+//            boardCopy.move(move.getStart(), move.getDestination());
+//            System.out.println("board: " + board);
+//            System.out.println("boardCopy: " + boardCopy);
+//            System.out.println("board piece: " + board.getPiece(2, 2));
+//            System.out.println("boardCopy piece: " + boardCopy.getPiece(2, 2));
+//            for (Piece piece : boardCopy.getAllPieces()) {
+//                piece.calculateLegalMoves();
+//                for (Point2D destination : legalMoves) {
+//                    System.out.println(boardCopy.isWhitesTurn());
+//                    System.out.println(boardCopy.getKing(!boardCopy.isWhitesTurn()).getType());
+//                    if (destination.equals(boardCopy.getKing(!boardCopy.isWhitesTurn()))) {
+//                        return true;
+//                    }
+//                }
+//            }
+//        } catch (CloneNotSupportedException e) {
+//            System.out.println("das war wohl nix");
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
 
     //getter and setter

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cloning-master">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/cloning-master.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
