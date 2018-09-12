@@ -1,6 +1,5 @@
 package model;
 
-import com.google.gson.Gson;
 import com.rits.cloning.Cloner;
 import javafx.geometry.Point2D;
 import model.pieces.*;
@@ -21,29 +20,17 @@ public class Board {
     private boolean blackCastlingLong;
     private String enPassant = "-";
 
-//    @Override
-//    public Object clone() throws CloneNotSupportedException {
-//        Board board = (Board) super.clone();
-//        board.chessBoard = board.chessBoard.clone();
-//        board.allPieces = new ArrayList<>(board.allPieces);
-//        //allPieces.forEach(x -> x = x.clone());
-//        return board;
-//    }
-
-
-//    @Override
-//    public Object clone() throws CloneNotSupportedException {
-//        Board clonedBoard = (Board)super.clone();
-//        clonedBoard.chessBoard = this.chessBoard.clone();
-//        return clonedBoard;
-//    }
-
-
+    /**
+     * deep clones any Object.
+     * see also https://github.com/kostaskougios/cloning
+     *
+     * @return
+     */
     public Object clone() {
 //        Gson gson = new Gson();
-////        String serialized = gson.toJson(this);
-////        Board boardCopy = gson.fromJson(serialized, Board.class);
-////        return boardCopy;
+//        String serialized = gson.toJson(this);
+//        Board boardCopy = gson.fromJson(serialized, Board.class);
+//        return boardCopy;
         Cloner cloner = new Cloner();
         Board boardCopy = cloner.deepClone(this);
         return boardCopy;
@@ -166,14 +153,17 @@ public class Board {
         Piece pieceTaken = getPiece(destination);
         String promotion = "";
 
+        checkCastling(r1, c1, r2, c2);
+
         // castling long
         if ((getPiece(start).getType().equals(Type.KING_WHITE) || getPiece(start).getType().equals(Type.KING_BLACK))
                 && (c1 - c2) == 2) {
             specialMove = SpecialMove.CASTLE_LONG;
-            ((King) getPiece(start)).setCastling(false);
             if (r1 == 0) {
+                blackCastlingShort = false;
                 blackCastlingLong = false;
             } else {
+                whiteCastlingShort = false;
                 whiteCastlingLong = false;
             }
             chessBoard[r1][3] = chessBoard[r1][0];
@@ -184,11 +174,12 @@ public class Board {
         if ((getPiece(start).getType().equals(Type.KING_WHITE) || getPiece(start).getType().equals(Type.KING_BLACK))
                 && (c1 - c2) == -2) {
             specialMove = SpecialMove.CASTLE_SHORT;
-            ((King) getPiece(start)).setCastling(false);
             if (r1 == 0) {
                 blackCastlingShort = false;
+                blackCastlingLong = false;
             } else {
                 whiteCastlingShort = false;
+                whiteCastlingLong = false;
             }
             chessBoard[r1][5] = chessBoard[r1][7];
             chessBoard[r1][7] = null;
@@ -242,6 +233,34 @@ public class Board {
         System.out.println("move " + notation + "\n");
 
         calculatePossibleMoves();
+    }
+
+    private void checkCastling(int r1, int c1, int r2, int c2) {
+        Type piece = getPiece(r1, c1).getType();
+        // king moves
+        if (piece.equals(Type.KING_BLACK)) {
+            blackCastlingShort = false;
+            blackCastlingLong = false;
+            return;
+        }
+        if (piece.equals(Type.KING_WHITE)) {
+            whiteCastlingShort = false;
+            whiteCastlingLong = false;
+            return;
+        }
+        // rook moves or rook is taken
+        if ((r1 == 0 && c1 == 0) || (r2 == 0 && c2 == 0)) {
+            blackCastlingLong = false;
+        }
+        if ((r1 == 0 && c1 == 7) || (r2 == 0 && c2 == 7)) {
+            blackCastlingShort = false;
+        }
+        if ((r1 == 7 && c1 == 0) || (r2 == 7 && c2 == 0)) {
+            whiteCastlingLong = false;
+        }
+        if ((r1 == 7 && c1 == 7) || (r2 == 7 && c2 == 7)) {
+            whiteCastlingShort = false;
+        }
     }
 
     public void saveMove(Point2D start, Point2D destination, SpecialMove specialMove, String notation) {
@@ -568,6 +587,37 @@ public class Board {
         return moves.get(moves.size() - 1);
     }
 
+    public boolean isWhiteCastlingShort() {
+        return whiteCastlingShort;
+    }
+
+    public void setWhiteCastlingShort(boolean whiteCastlingShort) {
+        this.whiteCastlingShort = whiteCastlingShort;
+    }
+
+    public boolean isWhiteCastlingLong() {
+        return whiteCastlingLong;
+    }
+
+    public void setWhiteCastlingLong(boolean whiteCastlingLong) {
+        this.whiteCastlingLong = whiteCastlingLong;
+    }
+
+    public boolean isBlackCastlingShort() {
+        return blackCastlingShort;
+    }
+
+    public void setBlackCastlingShort(boolean blackCastlingShort) {
+        this.blackCastlingShort = blackCastlingShort;
+    }
+
+    public boolean isBlackCastlingLong() {
+        return blackCastlingLong;
+    }
+
+    public void setBlackCastlingLong(boolean blackCastlingLong) {
+        this.blackCastlingLong = blackCastlingLong;
+    }
 }
 
 

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
-    boolean castling = true;
+    //boolean castling = true;
 
     public King(Point2D position, boolean white, Board board) {
         super(position, white, board);
@@ -63,31 +63,36 @@ public class King extends Piece {
             }
         }
         // short castling
-        if (castling) {
-            if (board.getPiece(r, c + 1) == null
-                    && board.getPiece(r, c + 2) == null
-                    && (board.getPiece(r, c + 3).getType().equals(Type.ROOK_WHITE) ||
-                    board.getPiece(r, c + 3).getType().equals(Type.ROOK_BLACK))
-                    && board.getPiece(r, c + 3).isWhite() == this.isWhite()
+        if (board.isWhiteCastlingShort() && this.isWhite()) {
+            if (board.getPiece(r, c + 1) == null && board.getPiece(r, c + 2) == null
+            ) {
+                legalMoves.add(new Point2D(r, c + 2));
+            }
+        }
+        if (board.isBlackCastlingShort() && !this.isWhite()) {
+            if (board.getPiece(r, c + 1) == null && board.getPiece(r, c + 2) == null
             ) {
                 legalMoves.add(new Point2D(r, c + 2));
             }
         }
         // long castling
-        if (castling) {
+        if (board.isWhiteCastlingLong() && this.isWhite()) {
             if (board.getPiece(r, c - 1) == null
                     && board.getPiece(r, c - 2) == null
                     && board.getPiece(r, c - 3) == null
-                    && (board.getPiece(r, c - 4).getType().equals(Type.ROOK_WHITE) ||
-                    board.getPiece(r, c - 4).getType().equals(Type.ROOK_BLACK))
-                    && board.getPiece(r, c - 4).isWhite() == this.isWhite()
             ) {
                 legalMoves.add(new Point2D(r, c - 2));
             }
         }
-    }
+        if (board.isBlackCastlingLong() && !this.isWhite()) {
+            if (board.getPiece(r, c - 1) == null
+                    && board.getPiece(r, c - 2) == null
+                    && board.getPiece(r, c - 3) == null
+            ) {
+                legalMoves.add(new Point2D(r, c - 2));
+            }
+        }
 
-    public void setCastling(boolean castling) {
-        this.castling = castling;
+
     }
 }

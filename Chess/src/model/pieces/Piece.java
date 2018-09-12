@@ -24,14 +24,12 @@ public abstract class Piece {
 
     public void removeIllegalMoves() {
         ArrayList<Point2D> legalMovesChessChecked = new ArrayList<>();
-        //String fen = board.getPosition();
         for (Point2D legalMove : legalMoves) {
             Board clonedBoard = (Board)board.clone();
             clonedBoard.move(getPosition(), legalMove);
             if (!clonedBoard.checkForCheck()) {
                 legalMovesChessChecked.add(legalMove);
             }
-            //board.setPosition(fen);
         }
         legalMoves = legalMovesChessChecked;
     }
