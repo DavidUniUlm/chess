@@ -35,6 +35,16 @@ public class Brain {
                 previousClick = square;
             }
         } else {
+            if (piece != null && piece.equals(board.getPiece(previousClick))) {
+                previousClick = null;
+                chessGuiController.resetColors();
+                return;
+            }
+            if (piece != null && piece.isWhite() == board.isWhitesTurn()) {
+                previousClick = null;
+                onSquareClicked(x, y);
+                return;
+            }
             boolean legalMove = board.checkLegalMove(previousClick, square);
             if (legalMove) {
                 board.move(previousClick, square);
