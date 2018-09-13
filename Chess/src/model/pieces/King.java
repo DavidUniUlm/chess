@@ -21,8 +21,8 @@ public class King extends Piece {
     @Override
     public void calculatePreliminaryMoves() {
         legalMoves.clear();
-        int r = (int) position.getX();
-        int c = (int) position.getY();
+        int r =  position.getX();
+        int c =  position.getY();
         ArrayList<Point> possibleMoves = new ArrayList<>();
         // move forwards
         if (r - 1 >= 0) {

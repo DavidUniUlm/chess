@@ -17,11 +17,11 @@ public class Translator {
     }
 
     public static String getAlgebraicNotationRow(Point point) {
-        return getAlgebraicNotationRow((int) point.getX());
+        return getAlgebraicNotationRow(point.getX());
     }
 
     public static String getAlgebraicNotationColumn(Point point) {
-        return getAlgebraicNotationColumn((int) point.getY());
+        return getAlgebraicNotationColumn( point.getY());
     }
 
     public static String getAlgebraicNotation(int r, int c) {
@@ -29,7 +29,7 @@ public class Translator {
     }
 
     public static String getAlgebraicNotation(Point square) {
-        return getAlgebraicNotation((int) square.getX(), (int) square.getY());
+        return getAlgebraicNotation( square.getX(),  square.getY());
     }
 
 }

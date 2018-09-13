@@ -22,8 +22,8 @@ public class Pawn extends Piece {
     @Override
     public void calculatePreliminaryMoves() {
         legalMoves.clear();
-        int r = (int) position.getX();
-        int c = (int) position.getY();
+        int r =  position.getX();
+        int c =  position.getY();
 
         if (white) {
             // one forward (no out of bounds check necessary)

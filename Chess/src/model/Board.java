@@ -92,11 +92,11 @@ public class Board {
     }
 
     public Piece getPiece(Point square) {
-        return getPiece((int) square.getX(), (int) square.getY());
+        return getPiece(square.getX(), square.getY());
     }
 
     public boolean checkLegalMove(Point start, Point destination) {
-        Piece piece = getPiece((int) start.getX(), (int) start.getY());
+        Piece piece = getPiece(start.getX(), start.getY());
         if (piece.getLegalMoves().contains(destination)) {
             return true;
         }
@@ -156,10 +156,10 @@ public class Board {
      */
     public void move(Point start, Point destination) {
         SpecialMove specialMove = SpecialMove.FALSE;
-        int r1 = (int) start.getX();
-        int c1 = (int) start.getY();
-        int r2 = (int) destination.getX();
-        int c2 = (int) destination.getY();
+        int r1 = start.getX();
+        int c1 = start.getY();
+        int r2 = destination.getX();
+        int c2 = destination.getY();
         Piece pieceMoved = getPiece(start);
         Piece pieceTaken = getPiece(destination);
         String promotion = "";
@@ -272,9 +272,9 @@ public class Board {
     }
 
     public void saveMove(Point start, Point destination, SpecialMove specialMove, String notation) {
-        int counter = getLastMove() == null? 1 : getLastMove().getCounter() + 1;
+        int counter = getLastMove() == null ? 1 : getLastMove().getCounter() + 1;
         String addToNotation = "";
-        if(counter % 2 != 0){ // white move
+        if (counter % 2 != 0) { // white move
             addToNotation = "" + ((counter + 1) / 2) + ".";
         }
         notation = addToNotation + notation;
@@ -328,7 +328,7 @@ public class Board {
             case EN_PASSANT:
                 notation += Translator.getAlgebraicNotationColumn(start);
                 notation += "x";
-                notation += Translator.getAlgebraicNotationRow(destination);
+                notation += Translator.getAlgebraicNotation(destination);
                 break;
             default: // all pawn promotions
                 if (pieceTaken != null) {

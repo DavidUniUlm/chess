@@ -25,7 +25,7 @@ public class Point {
             long bits = 7L;
             bits = 31L * bits + Double.doubleToLongBits(getX());
             bits = 31L * bits + Double.doubleToLongBits(getY());
-            hash = (int) (bits ^ (bits >> 32));
+            hash =  (int)(bits ^ (bits >> 32));
         }
         return hash;
     }

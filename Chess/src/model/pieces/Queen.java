@@ -25,8 +25,8 @@ public class Queen extends Piece {
      * copied from bishop
      */
     private void calculateLegalMovesDiagonal() {
-        int row = (int) position.getX();
-        int column = (int) position.getY();
+        int row =  position.getX();
+        int column =  position.getY();
         int r = row;
         int c = column;
 
@@ -73,8 +73,8 @@ public class Queen extends Piece {
      * copied from Rook
      */
     private void calculateLegalMovesStraight() {
-        int row = (int) position.getX();
-        int column = (int) position.getY();
+        int row =  position.getX();
+        int column =  position.getY();
         int r = row;
         int c = column;
 

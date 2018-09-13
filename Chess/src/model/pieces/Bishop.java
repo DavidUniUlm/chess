@@ -17,8 +17,8 @@ public class Bishop extends Piece {
     @Override
     public void calculatePreliminaryMoves() {
         legalMoves.clear();
-        int row = (int) position.getX();
-        int column = (int) position.getY();
+        int row =  position.getX();
+        int column =  position.getY();
         int r = row;
         int c = column;
 
