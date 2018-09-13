@@ -1,10 +1,10 @@
 package model.pieces;
 
-import javafx.geometry.Point2D;
+import model.Point;
 import model.Board;
 
 public class Queen extends Piece {
-    public Queen(Point2D position, boolean white, Board board) {
+    public Queen(Point position, boolean white, Board board) {
         super(position, white, board);
         value = 9;
         type = (white? Type.QUEEN_WHITE : Type.QUEEN_BLACK);
@@ -32,40 +32,40 @@ public class Queen extends Piece {
 
         // down right:
         while (++r < 8 && ++c < 8 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r < 8 && c < 8 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //up left
         while (--r >= 0 && --c >= 0 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r >= 0 && c >= 0 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //down left
         while (++r < 8 && --c >= 0 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r < 8 && c >= 0 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //up right
         while (--r >= 0 && ++c < 8 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r >= 0 && c < 8 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
     }
 
@@ -80,40 +80,40 @@ public class Queen extends Piece {
 
         // right:
         while (++c < 8 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (c < 8 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //left
         while (--c >= 0 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (c >= 0 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //down
         while (++r < 8 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r < 8 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         r = row;
         c = column;
 
         //up
         while (--r >= 0 && board.getPiece(r, c) == null) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
         if (r >= 0 && board.getPiece(r, c).isWhite() != this.isWhite()) {
-            legalMoves.add(new Point2D(r, c));
+            legalMoves.add(new Point(r, c));
         }
     }
 }

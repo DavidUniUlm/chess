@@ -1,6 +1,6 @@
 package model.pieces;
 
-import javafx.geometry.Point2D;
+import model.Point;
 import model.Board;
 
 import java.util.ArrayList;
@@ -11,8 +11,8 @@ public abstract class Piece {
     Type type;
     float value;
     char code;
-    Point2D position;
-    ArrayList<Point2D> legalMoves = new ArrayList<>();
+    Point position;
+    ArrayList<Point> legalMoves = new ArrayList<>();
     Board board;
 
     public Piece() {
@@ -22,8 +22,8 @@ public abstract class Piece {
      * removes all moves that are illegal due to check
      */
     public void removeIllegalMoves() {
-        ArrayList<Point2D> legalMovesChessChecked = new ArrayList<>();
-        for (Point2D legalMove : legalMoves) {
+        ArrayList<Point> legalMovesChessChecked = new ArrayList<>();
+        for (Point legalMove : legalMoves) {
             Board clonedBoard = (Board)board.clone();
             clonedBoard.move(getPosition(), legalMove);
             if (!clonedBoard.checkForCheck()) {
@@ -34,7 +34,7 @@ public abstract class Piece {
     }
 
 
-    public Piece(Point2D position, boolean white, Board board) {
+    public Piece(Point position, boolean white, Board board) {
         this.position = position;
         this.white = white;
         this.board = board;
@@ -80,15 +80,15 @@ public abstract class Piece {
         this.code = code;
     }
 
-    public Point2D getPosition() {
+    public Point getPosition() {
         return position;
     }
 
-    public void setPosition(Point2D position) {
+    public void setPosition(Point position) {
         this.position = position;
     }
 
-    public ArrayList<Point2D> getLegalMoves() {
+    public ArrayList<Point> getLegalMoves() {
         return legalMoves;
     }
 

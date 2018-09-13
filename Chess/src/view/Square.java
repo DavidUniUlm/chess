@@ -1,6 +1,6 @@
 package view;
 
-import javafx.geometry.Point2D;
+import model.Point;
 
 public enum Square {
 
@@ -21,8 +21,8 @@ public enum Square {
         this.y = y;
     }
 
-    public Point2D getCoordinates() {
-        return new Point2D(x, y);
+    public Point getCoordinates() {
+        return new Point(x, y);
     }
 
 }

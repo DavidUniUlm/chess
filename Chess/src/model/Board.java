@@ -2,7 +2,7 @@ package model;
 
 import com.rits.cloning.Cloner;
 import controller.Translator;
-import javafx.geometry.Point2D;
+import model.Point;
 import model.pieces.*;
 import view.SpecialMove;
 import model.pieces.Type;
@@ -37,7 +37,7 @@ public class Board {
     public boolean checkForCheck() {
         King king = (King) (whitesTurn ? getKing(false) : getKing(true));
         for (Piece piece : allPieces) {
-            for (Point2D legalMove : piece.getLegalMoves()) {
+            for (Point legalMove : piece.getLegalMoves()) {
                 if (legalMove.equals(king.getPosition())) {
                     return true;
                 }
@@ -57,26 +57,26 @@ public class Board {
         blackCastlingLong = true;
         enPassant = "-";
         for (int k = 0; k < 8; k++) {
-            chessBoard[1][k] = new Pawn(new Point2D(1, k), false, this);
-            chessBoard[6][k] = new Pawn(new Point2D(6, k), true, this);
+            chessBoard[1][k] = new Pawn(new Point(1, k), false, this);
+            chessBoard[6][k] = new Pawn(new Point(6, k), true, this);
         }
-        chessBoard[0][0] = new Rook(new Point2D(0, 0), false, this);
-        chessBoard[0][1] = new Knight(new Point2D(0, 1), false, this);
-        chessBoard[0][2] = new Bishop(new Point2D(0, 2), false, this);
-        chessBoard[0][3] = new Queen(new Point2D(0, 3), false, this);
-        chessBoard[0][4] = new King(new Point2D(0, 4), false, this);
-        chessBoard[0][5] = new Bishop(new Point2D(0, 5), false, this);
-        chessBoard[0][6] = new Knight(new Point2D(0, 6), false, this);
-        chessBoard[0][7] = new Rook(new Point2D(0, 7), false, this);
+        chessBoard[0][0] = new Rook(new Point(0, 0), false, this);
+        chessBoard[0][1] = new Knight(new Point(0, 1), false, this);
+        chessBoard[0][2] = new Bishop(new Point(0, 2), false, this);
+        chessBoard[0][3] = new Queen(new Point(0, 3), false, this);
+        chessBoard[0][4] = new King(new Point(0, 4), false, this);
+        chessBoard[0][5] = new Bishop(new Point(0, 5), false, this);
+        chessBoard[0][6] = new Knight(new Point(0, 6), false, this);
+        chessBoard[0][7] = new Rook(new Point(0, 7), false, this);
 
-        chessBoard[7][0] = new Rook(new Point2D(7, 0), true, this);
-        chessBoard[7][1] = new Knight(new Point2D(7, 1), true, this);
-        chessBoard[7][2] = new Bishop(new Point2D(7, 2), true, this);
-        chessBoard[7][3] = new Queen(new Point2D(7, 3), true, this);
-        chessBoard[7][4] = new King(new Point2D(7, 4), true, this);
-        chessBoard[7][5] = new Bishop(new Point2D(7, 5), true, this);
-        chessBoard[7][6] = new Knight(new Point2D(7, 6), true, this);
-        chessBoard[7][7] = new Rook(new Point2D(7, 7), true, this);
+        chessBoard[7][0] = new Rook(new Point(7, 0), true, this);
+        chessBoard[7][1] = new Knight(new Point(7, 1), true, this);
+        chessBoard[7][2] = new Bishop(new Point(7, 2), true, this);
+        chessBoard[7][3] = new Queen(new Point(7, 3), true, this);
+        chessBoard[7][4] = new King(new Point(7, 4), true, this);
+        chessBoard[7][5] = new Bishop(new Point(7, 5), true, this);
+        chessBoard[7][6] = new Knight(new Point(7, 6), true, this);
+        chessBoard[7][7] = new Rook(new Point(7, 7), true, this);
 
         setPreliminaryMoves();
         printBoard();
@@ -91,11 +91,11 @@ public class Board {
         return (chessBoard[r][c]);
     }
 
-    public Piece getPiece(Point2D square) {
+    public Piece getPiece(Point square) {
         return getPiece((int) square.getX(), (int) square.getY());
     }
 
-    public boolean checkLegalMove(Point2D start, Point2D destination) {
+    public boolean checkLegalMove(Point start, Point destination) {
         Piece piece = getPiece((int) start.getX(), (int) start.getY());
         if (piece.getLegalMoves().contains(destination)) {
             return true;
@@ -154,7 +154,7 @@ public class Board {
      * @param start
      * @param destination
      */
-    public void move(Point2D start, Point2D destination) {
+    public void move(Point start, Point destination) {
         SpecialMove specialMove = SpecialMove.FALSE;
         int r1 = (int) start.getX();
         int c1 = (int) start.getY();
@@ -179,7 +179,7 @@ public class Board {
             }
             chessBoard[r1][3] = chessBoard[r1][0];
             chessBoard[r1][0] = null;
-            getPiece(r1, 3).setPosition(new Point2D(r1, 3));
+            getPiece(r1, 3).setPosition(new Point(r1, 3));
         }
         // castling short
         if ((getPiece(start).getType().equals(Type.KING_WHITE) || getPiece(start).getType().equals(Type.KING_BLACK))
@@ -194,7 +194,7 @@ public class Board {
             }
             chessBoard[r1][5] = chessBoard[r1][7];
             chessBoard[r1][7] = null;
-            getPiece(r1, 5).setPosition(new Point2D(r1, 5));
+            getPiece(r1, 5).setPosition(new Point(r1, 5));
         }
 
         // take piece en passant
@@ -271,7 +271,7 @@ public class Board {
         }
     }
 
-    public void saveMove(Point2D start, Point2D destination, SpecialMove specialMove, String notation) {
+    public void saveMove(Point start, Point destination, SpecialMove specialMove, String notation) {
         int counter = getLastMove() == null? 1 : getLastMove().getCounter() + 1;
         String addToNotation = "";
         if(counter % 2 != 0){ // white move
@@ -281,13 +281,13 @@ public class Board {
         moves.add(new Move(start, destination, specialMove, notation, getPosition(), allPieces, counter));
     }
 
-    public String createNotation(Piece pieceMoved, Piece pieceTaken, Point2D start, Point2D destination, SpecialMove specialMove, String promotion) {
+    public String createNotation(Piece pieceMoved, Piece pieceTaken, Point start, Point destination, SpecialMove specialMove, String promotion) {
         String notation = "";
         String column = "";
         String row = "";
         for (Piece otherPiece : allPieces) {
             if (otherPiece.getType().equals(pieceMoved.getType())) { // same color!
-                for (Point2D legalMove : otherPiece.getLegalMoves()) {
+                for (Point legalMove : otherPiece.getLegalMoves()) {
                     if (legalMove.getX() == destination.getX() && legalMove.getY() == destination.getY()) {
                         if (!(otherPiece.getPosition().getY() == start.getY())) {
                             column = Double.toString((char) start.getY() + 97);
@@ -452,40 +452,40 @@ public class Board {
                 char code = codes[c - emptySquares];
                 switch (code) {
                     case 'p':
-                        chessBoard[r][c] = new Pawn(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new Pawn(new Point(r, c), false, this);
                         break;
                     case 'n':
-                        chessBoard[r][c] = new Knight(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new Knight(new Point(r, c), false, this);
                         break;
                     case 'b':
-                        chessBoard[r][c] = new Bishop(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new Bishop(new Point(r, c), false, this);
                         break;
                     case 'r':
-                        chessBoard[r][c] = new Rook(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new Rook(new Point(r, c), false, this);
                         break;
                     case 'q':
-                        chessBoard[r][c] = new Queen(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new Queen(new Point(r, c), false, this);
                         break;
                     case 'k':
-                        chessBoard[r][c] = new King(new Point2D(r, c), false, this);
+                        chessBoard[r][c] = new King(new Point(r, c), false, this);
                         break;
                     case 'P':
-                        chessBoard[r][c] = new Pawn(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new Pawn(new Point(r, c), true, this);
                         break;
                     case 'N':
-                        chessBoard[r][c] = new Knight(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new Knight(new Point(r, c), true, this);
                         break;
                     case 'B':
-                        chessBoard[r][c] = new Bishop(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new Bishop(new Point(r, c), true, this);
                         break;
                     case 'R':
-                        chessBoard[r][c] = new Rook(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new Rook(new Point(r, c), true, this);
                         break;
                     case 'Q':
-                        chessBoard[r][c] = new Queen(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new Queen(new Point(r, c), true, this);
                         break;
                     case 'K':
-                        chessBoard[r][c] = new King(new Point2D(r, c), true, this);
+                        chessBoard[r][c] = new King(new Point(r, c), true, this);
                         break;
                     default:
                         int emptySpace = (int) code - 48;

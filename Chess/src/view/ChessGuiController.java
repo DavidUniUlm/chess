@@ -3,7 +3,7 @@ package view;
 import controller.Controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
+import model.Point;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -34,9 +34,9 @@ public class ChessGuiController {
      * following HashMaps contain all the squares or pieces on the board
      * get a square or piece by calling any coordinate of the board
      */
-    HashMap<Point2D, Rectangle> squares = new HashMap<>();
-    HashMap<Point2D, Rectangle> coloredSquares = new HashMap<>();
-    HashMap<Point2D, Rectangle> pieces = new HashMap<>();
+    HashMap<Point, Rectangle> squares = new HashMap<>();
+    HashMap<Point, Rectangle> coloredSquares = new HashMap<>();
+    HashMap<Point, Rectangle> pieces = new HashMap<>();
 
 
     @FXML
@@ -77,7 +77,7 @@ public class ChessGuiController {
         }
     };
 
-    public void colorSquare(Point2D coordinates, Color color) {
+    public void colorSquare(Point coordinates, Color color) {
         coloredSquares.get(coordinates).setFill(color);
     }
 
@@ -108,7 +108,7 @@ public class ChessGuiController {
      * @param destination destination coordinates
      * @param specialMove a move that causes another action like pawn promotion etc.
      */
-    public void move(Point2D start, Point2D destination, SpecialMove specialMove) {
+    public void move(Point start, Point destination, SpecialMove specialMove) {
         switch (specialMove) {
             case FALSE:
                 move(start, destination);
@@ -165,7 +165,7 @@ public class ChessGuiController {
                 break;
             case EN_PASSANT:
                 move(start, destination);
-                Point2D takenPawn = (new Point2D(start.getX(), destination.getY()));
+                Point takenPawn = (new Point(start.getX(), destination.getY()));
                 pieces.get(takenPawn).setFill(Color.TRANSPARENT);
                 break;
         }
@@ -178,7 +178,7 @@ public class ChessGuiController {
      * @param start       starting coordinates
      * @param destination destination coordinates
      */
-    public void move(Point2D start, Point2D destination) {
+    public void move(Point start, Point destination) {
         Paint Piece = pieces.get(start).getFill();
         pieces.get(start).setFill(Color.TRANSPARENT);
         pieces.get(destination).setFill(Piece);
@@ -193,7 +193,7 @@ public class ChessGuiController {
      * @param y2 destination column
      */
     public void move(int x1, int y1, int x2, int y2) {
-        move(new Point2D(x1, y1), new Point2D(x2, y2));
+        move(new Point(x1, y1), new Point(x2, y2));
     }
 
     /**
@@ -206,7 +206,7 @@ public class ChessGuiController {
      * @param specialMove a move that causes another action like pawn promotion etc.
      */
     public void move(int x1, int y1, int x2, int y2, SpecialMove specialMove) {
-        move(new Point2D(x1, y1), new Point2D(x2, y2), specialMove);
+        move(new Point(x1, y1), new Point(x2, y2), specialMove);
     }
 
     public void setPosition(Piece[][] chessBoard) {
@@ -215,10 +215,10 @@ public class ChessGuiController {
             for (int c = 0; c < 8; c++) {
                 Piece piece = chessBoard[r][c];
                 if (piece == null) {
-                    pieces.get(new Point2D(r, c)).setFill(Color.TRANSPARENT);
+                    pieces.get(new Point(r, c)).setFill(Color.TRANSPARENT);
                 } else {
                     Paint image = piece.getType().getImage();
-                    pieces.get(new Point2D(r, c)).setFill(image);
+                    pieces.get(new Point(r, c)).setFill(image);
                 }
             }
         }
@@ -229,10 +229,10 @@ public class ChessGuiController {
         boolean whiteSquare = true;
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
-                squares.put(new Point2D(r, c), new Rectangle(width, height, whiteSquare ? white : black));
-                board.add(squares.get(new Point2D(r, c)), c, r);
-                coloredSquares.put(new Point2D(r, c), new Rectangle(width, height, Color.TRANSPARENT));
-                board.add(coloredSquares.get(new Point2D(r, c)), c, r);
+                squares.put(new Point(r, c), new Rectangle(width, height, whiteSquare ? white : black));
+                board.add(squares.get(new Point(r, c)), c, r);
+                coloredSquares.put(new Point(r, c), new Rectangle(width, height, Color.TRANSPARENT));
+                board.add(coloredSquares.get(new Point(r, c)), c, r);
                 whiteSquare = !whiteSquare;
             }
             whiteSquare = !whiteSquare;
@@ -246,8 +246,8 @@ public class ChessGuiController {
     private void initializePieces() {
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
-                pieces.put(new Point2D(r, c), new Rectangle(width, height, Color.TRANSPARENT));
-                board.add(pieces.get(new Point2D(r, c)), c, r);
+                pieces.put(new Point(r, c), new Rectangle(width, height, Color.TRANSPARENT));
+                board.add(pieces.get(new Point(r, c)), c, r);
             }
         }
         //white pieces
@@ -260,7 +260,7 @@ public class ChessGuiController {
         pieces.get(Square.g1.getCoordinates()).setFill(Type.KNIGHT_WHITE.getImage());
         pieces.get(Square.h1.getCoordinates()).setFill(Type.ROOK_WHITE.getImage());
         for (int c = 0; c < 8; c++) {
-            pieces.get(new Point2D(6, c)).setFill(Type.PAWN_WHITE.getImage());
+            pieces.get(new Point(6, c)).setFill(Type.PAWN_WHITE.getImage());
         }
         //black pieces
         pieces.get(Square.a8.getCoordinates()).setFill(Type.ROOK_BLACK.getImage());
@@ -272,7 +272,7 @@ public class ChessGuiController {
         pieces.get(Square.g8.getCoordinates()).setFill(Type.KNIGHT_BLACK.getImage());
         pieces.get(Square.h8.getCoordinates()).setFill(Type.ROOK_BLACK.getImage());
         for (int c = 0; c < 8; c++) {
-            pieces.get(new Point2D(1, c)).setFill(Type.PAWN_BLACK.getImage());
+            pieces.get(new Point(1, c)).setFill(Type.PAWN_BLACK.getImage());
         }
     }
 

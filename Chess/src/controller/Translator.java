@@ -1,6 +1,6 @@
 package controller;
 
-import javafx.geometry.Point2D;
+import model.Point;
 
 /**
  * This class translates numeric coordinates into algebraic chess notation.
@@ -16,11 +16,11 @@ public class Translator {
         return "" + (char) (97 + c);
     }
 
-    public static String getAlgebraicNotationRow(Point2D point) {
+    public static String getAlgebraicNotationRow(Point point) {
         return getAlgebraicNotationRow((int) point.getX());
     }
 
-    public static String getAlgebraicNotationColumn(Point2D point) {
+    public static String getAlgebraicNotationColumn(Point point) {
         return getAlgebraicNotationColumn((int) point.getY());
     }
 
@@ -28,7 +28,7 @@ public class Translator {
         return getAlgebraicNotationColumn(c) + getAlgebraicNotationRow(r);
     }
 
-    public static String getAlgebraicNotation(Point2D square) {
+    public static String getAlgebraicNotation(Point square) {
         return getAlgebraicNotation((int) square.getX(), (int) square.getY());
     }
 

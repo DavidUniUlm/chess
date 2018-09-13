@@ -1,6 +1,6 @@
 package controller;
 
-import javafx.geometry.Point2D;
+import model.Point;
 import javafx.scene.paint.Color;
 import model.Board;
 import model.Move;
@@ -17,7 +17,7 @@ public class Controller {
 
     private ChessGuiController chessGuiController;
     private Board board = new Board();
-    private Point2D previousClick = null;
+    private Point previousClick = null;
     private Color color = Color.rgb(180, 0, 0, 0.5);
 
     public Controller() {
@@ -35,7 +35,7 @@ public class Controller {
 
 
     private void handleFirstClick(int r, int c) {
-        Point2D square = new Point2D(r, c);
+        Point square = new Point(r, c);
         Piece piece = board.getPiece(square);
 
         chessGuiController.resetColors();
@@ -48,7 +48,7 @@ public class Controller {
 
 
     private void handleSecondClick(int r, int c) {
-        Point2D square = new Point2D(r, c);
+        Point square = new Point(r, c);
         Piece piece = board.getPiece(square);
 
         // clicked on same square again
@@ -72,7 +72,7 @@ public class Controller {
     }
 
 
-    private void handleLegalMove(Point2D destination) {
+    private void handleLegalMove(Point destination) {
         // board
         board.move(previousClick, destination);
         board.setLegalMoves();
@@ -114,7 +114,7 @@ public class Controller {
             return;
         }
         for (Object square : legalMoves) {
-            chessGuiController.colorSquare((Point2D) square, colorLegalMoves);
+            chessGuiController.colorSquare((Point) square, colorLegalMoves);
         }
     }
 
