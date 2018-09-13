@@ -1,6 +1,6 @@
 package view;
 
-import controller.Brain;
+import controller.Controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import model.Move;
 import model.pieces.Piece;
+import model.pieces.Type;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class ChessGuiController {
 
-    Brain brain = Main.getBrain();
+    Controller controller = Main.getController();
     private int width = 60;
     private int height = width;
     private Color white = Color.rgb(200, 200, 200);
@@ -53,7 +54,7 @@ public class ChessGuiController {
     @FXML
     private TextFlow movesTextFlow;
 
-    public void showMoves(ArrayList<Move> moves) {
+    public void showNotation(ArrayList<Move> moves) {
         movesTextFlow.getChildren().clear();
         for (int i = 0; i < moves.size(); i++) {
             Text text = new Text(moves.get(i).getNotation() + "  ");
@@ -72,7 +73,7 @@ public class ChessGuiController {
             // TODO: getX zeigt falsche Werte an, sobald ein Padding-Wert (Rahmen) gesetzt wird. JavaFX-Fehler?
             int row = (int) Math.floor((event.getY() - board.getPadding().getTop()) / width);
             int column = (int) Math.floor((event.getX() - board.getPadding().getLeft()) / height);
-            brain.onSquareClicked(row, column);
+            controller.onSquareClicked(row, column);
         }
     };
 
@@ -87,14 +88,6 @@ public class ChessGuiController {
         }
     }
 
-//    /**
-//     * colors all squares that can be accessed by piece
-//     * @param x row coordinate
-//     * @param y column coordinate
-//     */
-//    public void showLegalMoves(int x, int y){
-//
-//    }
 
     /**
      * creates a board with colored squares and initial pieces
@@ -116,7 +109,6 @@ public class ChessGuiController {
      * @param specialMove a move that causes another action like pawn promotion etc.
      */
     public void move(Point2D start, Point2D destination, SpecialMove specialMove) {
-        System.out.println(specialMove);
         switch (specialMove) {
             case FALSE:
                 move(start, destination);

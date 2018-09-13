@@ -2,7 +2,6 @@ package model.pieces;
 
 import javafx.geometry.Point2D;
 import model.Board;
-import view.Type;
 
 public class Pawn extends Piece {
 
@@ -21,7 +20,7 @@ public class Pawn extends Piece {
      * TODO: look for a check;
      */
     @Override
-    public void calculateLegalMoves() {
+    public void calculatePreliminaryMoves() {
         legalMoves.clear();
         int r = (int) position.getX();
         int c = (int) position.getY();

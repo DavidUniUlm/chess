@@ -1,10 +1,11 @@
 package model;
 
 import com.rits.cloning.Cloner;
+import controller.Translator;
 import javafx.geometry.Point2D;
 import model.pieces.*;
 import view.SpecialMove;
-import view.Type;
+import model.pieces.Type;
 
 import java.util.ArrayList;
 
@@ -27,10 +28,6 @@ public class Board {
      * @return
      */
     public Object clone() {
-//        Gson gson = new Gson();
-//        String serialized = gson.toJson(this);
-//        Board boardCopy = gson.fromJson(serialized, Board.class);
-//        return boardCopy;
         Cloner cloner = new Cloner();
         Board boardCopy = cloner.deepClone(this);
         return boardCopy;
@@ -41,8 +38,6 @@ public class Board {
         King king = (King) (whitesTurn ? getKing(false) : getKing(true));
         for (Piece piece : allPieces) {
             for (Point2D legalMove : piece.getLegalMoves()) {
-//                System.out.println(legalMove);
-//                System.out.println("king.getPosition(): " + king.getPosition());
                 if (legalMove.equals(king.getPosition())) {
                     return true;
                 }
@@ -50,6 +45,7 @@ public class Board {
         }
         return false;
     }
+
 
     /**
      * sets model.pieces to their initial position on chessboard
@@ -82,7 +78,7 @@ public class Board {
         chessBoard[7][6] = new Knight(new Point2D(7, 6), true, this);
         chessBoard[7][7] = new Rook(new Point2D(7, 7), true, this);
 
-        calculatePossibleMoves();
+        setPreliminaryMoves();
         printBoard();
     }
 
@@ -107,10 +103,25 @@ public class Board {
         return false;
     }
 
-    public void calculatePossibleMoves() {
+    /**
+     * these are temporary moves that contain also illegal moves into check
+     */
+    public void setPreliminaryMoves() {
         updateAllPieces();
         for (Piece piece : allPieces) {
-            piece.calculateLegalMoves();
+            piece.calculatePreliminaryMoves();
+        }
+    }
+
+    /**
+     * all illegal moves are removed from preliminary determined moves
+     */
+    public void setLegalMoves() {
+        for (Piece piece : getAllPieces()) {
+            if ((isWhitesTurn() && piece.isWhite())
+                    || (!isWhitesTurn() && !piece.isWhite())) {
+                piece.removeIllegalMoves();
+            }
         }
     }
 
@@ -188,17 +199,17 @@ public class Board {
 
         // take piece en passant
         if ((getPiece(start).getType().equals(Type.PAWN_WHITE) || getPiece(start).getType().equals(Type.PAWN_BLACK))
-                && getAlgebraicNotation(r2, c2).equals(enPassant)) {
-            chessBoard[r2][c2] = null;
+                && Translator.getAlgebraicNotation(r2, c2).equals(enPassant)) {
+            chessBoard[r1][c2] = null; // remove taken pawn
             specialMove = SpecialMove.EN_PASSANT;
         }
 
         // check en passant next move
         if (getPiece(start).getType().equals(Type.PAWN_WHITE) || getPiece(start).getType().equals(Type.PAWN_BLACK)) {
             if ((r1 == 1 && r2 == 3)) {
-                enPassant = getAlgebraicNotation(2, c1);
+                enPassant = Translator.getAlgebraicNotation(2, c1);
             } else if ((r1 == 6 && r2 == 4)) {
-                enPassant = getAlgebraicNotation(5, c1);
+                enPassant = Translator.getAlgebraicNotation(5, c1);
             } else {
                 enPassant = "-";
             }
@@ -229,10 +240,7 @@ public class Board {
         String notation = createNotation(pieceMoved, pieceTaken, start, destination, specialMove, promotion); //TODO: anpassen
         saveMove(start, destination, specialMove, notation);
 
-        printBoard();
-        System.out.println("move " + notation + "\n");
-
-        calculatePossibleMoves();
+        setPreliminaryMoves();
     }
 
     private void checkCastling(int r1, int c1, int r2, int c2) {
@@ -264,7 +272,13 @@ public class Board {
     }
 
     public void saveMove(Point2D start, Point2D destination, SpecialMove specialMove, String notation) {
-        moves.add(new Move(start, destination, specialMove, notation, getPosition(), allPieces));
+        int counter = getLastMove() == null? 1 : getLastMove().getCounter() + 1;
+        String addToNotation = "";
+        if(counter % 2 != 0){ // white move
+            addToNotation = "" + ((counter + 1) / 2) + ".";
+        }
+        notation = addToNotation + notation;
+        moves.add(new Move(start, destination, specialMove, notation, getPosition(), allPieces, counter));
     }
 
     public String createNotation(Piece pieceMoved, Piece pieceTaken, Point2D start, Point2D destination, SpecialMove specialMove, String promotion) {
@@ -299,11 +313,11 @@ public class Board {
                     notation += row.equals("") ? row : column;
                 } else { // pawn
                     if (pieceTaken != null) {
-                        notation += getAlgebraicNotationColumn(start);
+                        notation += Translator.getAlgebraicNotationColumn(start);
                     }
                 }
                 notation += pieceTaken != null ? "x" : "";
-                notation += getAlgebraicNotation(destination);
+                notation += Translator.getAlgebraicNotation(destination);
                 break;
             case CASTLE_SHORT:
                 notation = "O-O";
@@ -312,16 +326,16 @@ public class Board {
                 notation = "O-O-O";
                 break;
             case EN_PASSANT:
-                notation += getAlgebraicNotationColumn(start);
+                notation += Translator.getAlgebraicNotationColumn(start);
                 notation += "x";
-                notation += getAlgebraicNotationRow(destination);
+                notation += Translator.getAlgebraicNotationRow(destination);
                 break;
             default: // all pawn promotions
                 if (pieceTaken != null) {
-                    notation += getAlgebraicNotationColumn(start);
+                    notation += Translator.getAlgebraicNotationColumn(start);
                     notation += "x";
                 }
-                notation += getAlgebraicNotation(destination);
+                notation += Translator.getAlgebraicNotation(destination);
                 notation += "=" + promotion;
         }
 
@@ -507,35 +521,7 @@ public class Board {
         // fourth group
         enPassant = fenGroup[3];
 
-        calculatePossibleMoves();
-    }
-
-
-    public static String getAlgebraicNotation(Point2D square) {
-        return getAlgebraicNotation((int) square.getX(), (int) square.getY());
-    }
-
-    public static String getAlgebraicNotation(int r, int c) {
-        String algebraicNotation = "";
-        algebraicNotation += (char) (97 + c);
-        algebraicNotation += 8 - r;
-        return algebraicNotation;
-    }
-
-    public static String getAlgebraicNotationRow(int r) {
-        return "" + (8 - r);
-    }
-
-    public static String getAlgebraicNotationRow(Point2D point) {
-        return getAlgebraicNotationRow((int) point.getX());
-    }
-
-    public static String getAlgebraicNotationColumn(int c) {
-        return "" + (char) (97 + c);
-    }
-
-    public static String getAlgebraicNotationColumn(Point2D point) {
-        return getAlgebraicNotationColumn((int) point.getY());
+        setPreliminaryMoves();
     }
 
 
@@ -561,30 +547,15 @@ public class Board {
         enPassant = "-";
     }
 
-//    public boolean checkLegalPosition(Move move) {
-//        // save
-//        Board bufferBoard = new Board();
-//        for (int r = 0; r < 8; r++) {
-//            for (int c = 0; c < 8; c++) {
-//                bufferBoard.chessBoard[r][c] = this.chessBoard[r][c];
-//            }
-//        }
-//        bufferBoard[move.getStart()]
-//
-//        return false;
-//    }
-
-
-    public ArrayList<Move> getMoves() {
-        return moves;
-    }
-
-
     public Move getLastMove() {
         if (moves.isEmpty()) {
             return null;
         }
         return moves.get(moves.size() - 1);
+    }
+
+    public ArrayList<Move> getMoves() {
+        return moves;
     }
 
     public boolean isWhiteCastlingShort() {
@@ -618,6 +589,7 @@ public class Board {
     public void setBlackCastlingLong(boolean blackCastlingLong) {
         this.blackCastlingLong = blackCastlingLong;
     }
+
 }
 
 

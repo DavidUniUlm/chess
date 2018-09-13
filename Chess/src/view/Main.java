@@ -1,16 +1,15 @@
 package view;
 
-import controller.Brain;
+import controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static Brain brain = new Brain();
+    private static Controller controller = new Controller();
     private static ChessGuiController chessGuiController;
 
     @Override
@@ -23,7 +22,7 @@ public class Main extends Application {
         //root.getChildren().add(promotionDialog.load());
 
         chessGuiController = chessGUI.getController();
-        brain.setChessGuiController(chessGuiController);
+        controller.setChessGuiController(chessGuiController);
 
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root));
@@ -35,8 +34,8 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static Brain getBrain() {
-        return brain;
+    public static Controller getController() {
+        return controller;
     }
 
 }

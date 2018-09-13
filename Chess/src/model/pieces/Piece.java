@@ -1,12 +1,8 @@
 package model.pieces;
 
-import com.google.gson.Gson;
 import javafx.geometry.Point2D;
 import model.Board;
-import model.Move;
-import view.Type;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public abstract class Piece {
@@ -22,6 +18,9 @@ public abstract class Piece {
     public Piece() {
     }
 
+    /**
+     * removes all moves that are illegal due to check
+     */
     public void removeIllegalMoves() {
         ArrayList<Point2D> legalMovesChessChecked = new ArrayList<>();
         for (Point2D legalMove : legalMoves) {
@@ -44,39 +43,7 @@ public abstract class Piece {
     /**
      * calculates every possible move of the king
      */
-    public abstract void calculateLegalMoves();
-
-
-//    /**
-//     * checks if a move is illegal because king could be taken by opponent
-//     *
-//     * @param move the move to be checked
-//     * @return true if player moves into check (illegal), false if move is legal
-//     */
-//    public boolean moveIntoCheck(Move move) {
-//        try {
-//            Board boardCopy = (Board) board.clone();
-//            boardCopy.move(move.getStart(), move.getDestination());
-//            System.out.println("board: " + board);
-//            System.out.println("boardCopy: " + boardCopy);
-//            System.out.println("board piece: " + board.getPiece(2, 2));
-//            System.out.println("boardCopy piece: " + boardCopy.getPiece(2, 2));
-//            for (Piece piece : boardCopy.getAllPieces()) {
-//                piece.calculateLegalMoves();
-//                for (Point2D destination : legalMoves) {
-//                    System.out.println(boardCopy.isWhitesTurn());
-//                    System.out.println(boardCopy.getKing(!boardCopy.isWhitesTurn()).getType());
-//                    if (destination.equals(boardCopy.getKing(!boardCopy.isWhitesTurn()))) {
-//                        return true;
-//                    }
-//                }
-//            }
-//        } catch (CloneNotSupportedException e) {
-//            System.out.println("das war wohl nix");
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
+    public abstract void calculatePreliminaryMoves();
 
 
     //getter and setter

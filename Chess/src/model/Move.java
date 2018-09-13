@@ -16,13 +16,15 @@ public class Move {
     private String notation;
     private SpecialMove specialMove;
     private String fen;
+    private int counter;
 
-    public Move(Point2D start, Point2D destination, SpecialMove specialMove, String notation, String fen, ArrayList<Piece> allPieces) {
+    public Move(Point2D start, Point2D destination, SpecialMove specialMove, String notation, String fen, ArrayList<Piece> allPieces, int counter) {
         this.start = start;
         this.destination = destination;
         this.specialMove = specialMove;
         this.notation = notation;
         this.fen = fen;
+        this.counter = counter;
         setNotation(allPieces);
     }
 
@@ -93,5 +95,13 @@ public class Move {
 
     public void setFen(String fen) {
         this.fen = fen;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 }

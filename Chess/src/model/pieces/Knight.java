@@ -2,7 +2,6 @@ package model.pieces;
 
 import javafx.geometry.Point2D;
 import model.Board;
-import view.Type;
 
 import java.util.ArrayList;
 
@@ -18,7 +17,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public void calculateLegalMoves() {
+    public void calculatePreliminaryMoves() {
         legalMoves.clear();
         int r = (int) position.getX();
         int c = (int) position.getY();

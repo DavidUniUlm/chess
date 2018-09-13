@@ -2,13 +2,10 @@ package model.pieces;
 
 import javafx.geometry.Point2D;
 import model.Board;
-import view.Type;
 
 import java.util.ArrayList;
 
 public class King extends Piece {
-
-    //boolean castling = true;
 
     public King(Point2D position, boolean white, Board board) {
         super(position, white, board);
@@ -22,7 +19,7 @@ public class King extends Piece {
 
 
     @Override
-    public void calculateLegalMoves() {
+    public void calculatePreliminaryMoves() {
         legalMoves.clear();
         int r = (int) position.getX();
         int c = (int) position.getY();
@@ -92,7 +89,5 @@ public class King extends Piece {
                 legalMoves.add(new Point2D(r, c - 2));
             }
         }
-
-
     }
 }

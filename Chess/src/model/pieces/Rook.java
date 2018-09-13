@@ -2,7 +2,6 @@ package model.pieces;
 
 import javafx.geometry.Point2D;
 import model.Board;
-import view.Type;
 
 public class Rook extends Piece {
     public Rook(Point2D position, boolean white, Board board) {
@@ -16,7 +15,7 @@ public class Rook extends Piece {
     }
 
     @Override
-    public void calculateLegalMoves() {
+    public void calculatePreliminaryMoves() {
         legalMoves.clear();
         int row = (int) position.getX();
         int column = (int) position.getY();
