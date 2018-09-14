@@ -1,7 +1,7 @@
 package model.pieces;
 
 import model.Point;
-import model.Board;
+import model.Board.Board;
 
 import java.util.ArrayList;
 
@@ -59,6 +59,7 @@ public class King extends Piece {
                 }
             }
         }
+        //TODO: bei allen Rochaden prüfen, ob König durch ein Schach zieht
         // short castling
         if (board.isWhiteCastlingShort() && this.isWhite()) {
             if (board.getPiece(r, c + 1) == null && board.getPiece(r, c + 2) == null

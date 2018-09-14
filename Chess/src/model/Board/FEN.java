@@ -1,5 +1,6 @@
-package model;
+package model.Board;
 
+import model.Point;
 import model.pieces.*;
 
 public abstract class FEN {

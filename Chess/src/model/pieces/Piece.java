@@ -1,7 +1,7 @@
 package model.pieces;
 
 import model.Point;
-import model.Board;
+import model.Board.Board;
 
 import java.util.ArrayList;
 

@@ -2,7 +2,7 @@ package controller;
 
 import model.Point;
 import javafx.scene.paint.Color;
-import model.Board;
+import model.Board.Board;
 import model.Move;
 import model.pieces.Piece;
 import view.ChessGuiController;

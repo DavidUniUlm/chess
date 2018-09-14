@@ -1,4 +1,4 @@
-package model;
+package model.Board;
 
 public class PGN {
 }

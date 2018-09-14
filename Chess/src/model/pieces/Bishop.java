@@ -1,7 +1,7 @@
 package model.pieces;
 
 import model.Point;
-import model.Board;
+import model.Board.Board;
 
 public class Bishop extends Piece {
     public Bishop(Point position, boolean white, Board board) {

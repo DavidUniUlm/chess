@@ -1,7 +1,8 @@
-package model;
+package model.Board;
 
 import com.rits.cloning.Cloner;
-import controller.Translator;
+import model.Move;
+import model.Point;
 import model.pieces.*;
 import view.SpecialMove;
 import model.pieces.Type;
@@ -244,120 +245,7 @@ public class Board {
      * @param destination
      */
     public void move(Point start, Point destination) {
-        SpecialMove specialMove = SpecialMove.FALSE;
-        int r1 = start.getX();
-        int c1 = start.getY();
-        int r2 = destination.getX();
-        int c2 = destination.getY();
-        Piece pieceMoved = getPiece(start);
-        Piece pieceTaken = getPiece(destination);
-        String promotion = "";
-
-        checkCastling(r1, c1, r2, c2);
-
-        // castling long
-        if ((getPiece(start).getType().equals(Type.KING_WHITE) || getPiece(start).getType().equals(Type.KING_BLACK))
-                && (c1 - c2) == 2) {
-            specialMove = SpecialMove.CASTLE_LONG;
-            if (r1 == 0) {
-                blackCastlingShort = false;
-                blackCastlingLong = false;
-            } else {
-                whiteCastlingShort = false;
-                whiteCastlingLong = false;
-            }
-            chessBoard[r1][3] = chessBoard[r1][0];
-            chessBoard[r1][0] = null;
-            getPiece(r1, 3).setPosition(new Point(r1, 3));
-        }
-        // castling short
-        if ((getPiece(start).getType().equals(Type.KING_WHITE) || getPiece(start).getType().equals(Type.KING_BLACK))
-                && (c1 - c2) == -2) {
-            specialMove = SpecialMove.CASTLE_SHORT;
-            if (r1 == 0) {
-                blackCastlingShort = false;
-                blackCastlingLong = false;
-            } else {
-                whiteCastlingShort = false;
-                whiteCastlingLong = false;
-            }
-            chessBoard[r1][5] = chessBoard[r1][7];
-            chessBoard[r1][7] = null;
-            getPiece(r1, 5).setPosition(new Point(r1, 5));
-        }
-
-        // take piece en passant
-        if ((getPiece(start).getType().equals(Type.PAWN_WHITE) || getPiece(start).getType().equals(Type.PAWN_BLACK))
-                && Translator.getAlgebraicNotation(r2, c2).equals(enPassant)) {
-            chessBoard[r1][c2] = null; // remove taken pawn
-            specialMove = SpecialMove.EN_PASSANT;
-        }
-
-        // check en passant next move
-        if (getPiece(start).getType().equals(Type.PAWN_WHITE) || getPiece(start).getType().equals(Type.PAWN_BLACK)) {
-            if ((r1 == 1 && r2 == 3)) {
-                enPassant = Translator.getAlgebraicNotation(2, c1);
-            } else if ((r1 == 6 && r2 == 4)) {
-                enPassant = Translator.getAlgebraicNotation(5, c1);
-            } else {
-                enPassant = "-";
-            }
-        } else {
-            enPassant = "-";
-        }
-
-        //move
-        chessBoard[r2][c2] = chessBoard[r1][c1];
-        chessBoard[r1][c1] = null;
-
-        // pawn promotion
-        if ((getPiece(r2, c2).getType().equals(Type.PAWN_WHITE) || getPiece(r2, c2).getType().equals(Type.PAWN_BLACK))
-                && (r2 == 0 || r2 == 7)
-        ) {
-            //Todo Den Nutzer eine Figur wählen lassen
-            promotion = "Q"; // remove later
-            if (whitesTurn) {
-                specialMove = SpecialMove.PROMOTION_QUEEN_WHITE;
-            } else {
-                specialMove = SpecialMove.PROMOTION_QUEEN_BLACK;
-            }
-            chessBoard[r2][c2] = new Queen(destination, whitesTurn, this);
-        }
-
-        getPiece(r2, c2).setPosition(destination);
-        whitesTurn = !whitesTurn;
-        String notation = Notation.createNotation(allPieces, pieceMoved, pieceTaken, start, destination, specialMove, promotion); //TODO: anpassen
-        saveMove(start, destination, specialMove, notation);
-
-        setPreliminaryMoves();
-    }
-
-    private void checkCastling(int r1, int c1, int r2, int c2) {
-        Type piece = getPiece(r1, c1).getType();
-        // king moves
-        if (piece.equals(Type.KING_BLACK)) {
-            blackCastlingShort = false;
-            blackCastlingLong = false;
-            return;
-        }
-        if (piece.equals(Type.KING_WHITE)) {
-            whiteCastlingShort = false;
-            whiteCastlingLong = false;
-            return;
-        }
-        // rook moves or rook is taken
-        if ((r1 == 0 && c1 == 0) || (r2 == 0 && c2 == 0)) {
-            blackCastlingLong = false;
-        }
-        if ((r1 == 0 && c1 == 7) || (r2 == 0 && c2 == 7)) {
-            blackCastlingShort = false;
-        }
-        if ((r1 == 7 && c1 == 0) || (r2 == 7 && c2 == 0)) {
-            whiteCastlingLong = false;
-        }
-        if ((r1 == 7 && c1 == 7) || (r2 == 7 && c2 == 7)) {
-            whiteCastlingShort = false;
-        }
+        MoveHandler.move(this, start, destination);
     }
 
 

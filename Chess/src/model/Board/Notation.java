@@ -1,6 +1,7 @@
-package model;
+package model.Board;
 
 import controller.Translator;
+import model.Point;
 import model.pieces.Piece;
 import view.SpecialMove;
 
