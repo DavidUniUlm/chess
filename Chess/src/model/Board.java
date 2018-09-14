@@ -2,7 +2,6 @@ package model;
 
 import com.rits.cloning.Cloner;
 import controller.Translator;
-import model.Point;
 import model.pieces.*;
 import view.SpecialMove;
 import model.pieces.Type;
@@ -33,7 +32,10 @@ public class Board {
         return boardCopy;
     }
 
-
+    /**
+     * checks if a position is legal or if the king can be taken
+     * @return
+     */
     public boolean checkForCheck() {
         King king = (King) (whitesTurn ? getKing(false) : getKing(true));
         for (Piece piece : allPieces) {
@@ -51,34 +53,7 @@ public class Board {
      * sets model.pieces to their initial position on chessboard
      */
     public void setNewGame() {
-        whiteCastlingShort = true;
-        whiteCastlingLong = true;
-        blackCastlingShort = true;
-        blackCastlingLong = true;
-        enPassant = "-";
-        for (int k = 0; k < 8; k++) {
-            chessBoard[1][k] = new Pawn(new Point(1, k), false, this);
-            chessBoard[6][k] = new Pawn(new Point(6, k), true, this);
-        }
-        chessBoard[0][0] = new Rook(new Point(0, 0), false, this);
-        chessBoard[0][1] = new Knight(new Point(0, 1), false, this);
-        chessBoard[0][2] = new Bishop(new Point(0, 2), false, this);
-        chessBoard[0][3] = new Queen(new Point(0, 3), false, this);
-        chessBoard[0][4] = new King(new Point(0, 4), false, this);
-        chessBoard[0][5] = new Bishop(new Point(0, 5), false, this);
-        chessBoard[0][6] = new Knight(new Point(0, 6), false, this);
-        chessBoard[0][7] = new Rook(new Point(0, 7), false, this);
-
-        chessBoard[7][0] = new Rook(new Point(7, 0), true, this);
-        chessBoard[7][1] = new Knight(new Point(7, 1), true, this);
-        chessBoard[7][2] = new Bishop(new Point(7, 2), true, this);
-        chessBoard[7][3] = new Queen(new Point(7, 3), true, this);
-        chessBoard[7][4] = new King(new Point(7, 4), true, this);
-        chessBoard[7][5] = new Bishop(new Point(7, 5), true, this);
-        chessBoard[7][6] = new Knight(new Point(7, 6), true, this);
-        chessBoard[7][7] = new Rook(new Point(7, 7), true, this);
-
-        setPreliminaryMoves();
+        setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -");
         printBoard();
     }
 
@@ -104,7 +79,7 @@ public class Board {
     }
 
     /**
-     * these are temporary moves that contain also illegal moves into check
+     * these are temporary moves that also contain illegal moves into check
      */
     public void setPreliminaryMoves() {
         updateAllPieces();
@@ -554,6 +529,7 @@ public class Board {
         return moves.get(moves.size() - 1);
     }
 
+    //getter and setter
     public ArrayList<Move> getMoves() {
         return moves;
     }
