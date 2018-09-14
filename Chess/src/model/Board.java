@@ -34,6 +34,7 @@ public class Board {
 
     /**
      * checks if a position is legal or if the king can be taken
+     *
      * @return
      */
     public boolean checkForCheck() {
@@ -53,9 +54,29 @@ public class Board {
      * sets model.pieces to their initial position on chessboard
      */
     public void setNewGame() {
-        setPosition("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -");
+        setPositionFromFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -");
         printBoard();
     }
+
+    /**
+     *
+     * @param fen
+     */
+    public void setPositionFromFen(String fen) {
+        clearBoard();                              // only in case something goes wrong
+        resetSpecialMoves();                       // only in case something goes wrong
+        Fen.setPosition(this, fen);
+        setPreliminaryMoves();
+    }
+
+    /**
+     *
+     * @return the fen notation of the recent position
+     */
+    public String getPositionAsFen() {
+        return Fen.getPosition(this);
+    }
+
 
     /**
      * @param r column
@@ -212,7 +233,7 @@ public class Board {
 
         getPiece(r2, c2).setPosition(destination);
         whitesTurn = !whitesTurn;
-        String notation = createNotation(pieceMoved, pieceTaken, start, destination, specialMove, promotion); //TODO: anpassen
+        String notation = Notation.createNotation(allPieces, pieceMoved, pieceTaken, start, destination, specialMove, promotion); //TODO: anpassen
         saveMove(start, destination, specialMove, notation);
 
         setPreliminaryMoves();
@@ -253,69 +274,9 @@ public class Board {
             addToNotation = "" + ((counter + 1) / 2) + ".";
         }
         notation = addToNotation + notation;
-        moves.add(new Move(start, destination, specialMove, notation, getPosition(), allPieces, counter));
+        moves.add(new Move(start, destination, specialMove, notation, getPositionAsFen(), allPieces, counter));
     }
 
-    public String createNotation(Piece pieceMoved, Piece pieceTaken, Point start, Point destination, SpecialMove specialMove, String promotion) {
-        String notation = "";
-        String column = "";
-        String row = "";
-        for (Piece otherPiece : allPieces) {
-            if (otherPiece.getType().equals(pieceMoved.getType())) { // same color!
-                for (Point legalMove : otherPiece.getLegalMoves()) {
-                    if (legalMove.getX() == destination.getX() && legalMove.getY() == destination.getY()) {
-                        if (!(otherPiece.getPosition().getY() == start.getY())) {
-                            column = Double.toString((char) start.getY() + 97);
-                        } else {
-                            column = "";
-                            row = Double.toString(8 - start.getX());
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!row.equals("")) {
-                break;
-            }
-        }
-
-        String code = Character.toString(pieceMoved.getCode()).toUpperCase();
-
-        switch (specialMove) {
-            case FALSE:
-                if (!code.equals("P")) {
-                    notation += code;
-                    notation += row.equals("") ? row : column;
-                } else { // pawn
-                    if (pieceTaken != null) {
-                        notation += Translator.getAlgebraicNotationColumn(start);
-                    }
-                }
-                notation += pieceTaken != null ? "x" : "";
-                notation += Translator.getAlgebraicNotation(destination);
-                break;
-            case CASTLE_SHORT:
-                notation = "O-O";
-                break;
-            case CASTLE_LONG:
-                notation = "O-O-O";
-                break;
-            case EN_PASSANT:
-                notation += Translator.getAlgebraicNotationColumn(start);
-                notation += "x";
-                notation += Translator.getAlgebraicNotation(destination);
-                break;
-            default: // all pawn promotions
-                if (pieceTaken != null) {
-                    notation += Translator.getAlgebraicNotationColumn(start);
-                    notation += "x";
-                }
-                notation += Translator.getAlgebraicNotation(destination);
-                notation += "=" + promotion;
-        }
-
-        return notation;
-    }
 
 
     /**
@@ -335,23 +296,9 @@ public class Board {
         System.out.println();
     }
 
-
-    public Piece[][] getChessBoard() {
-        return chessBoard;
-    }
-
-    public boolean isWhitesTurn() {
-        return whitesTurn;
-    }
-
-    public void setWhitesTurn(boolean whitesTurn) {
-        this.whitesTurn = whitesTurn;
-    }
-
-    public ArrayList<Piece> getAllPieces() {
-        return allPieces;
-    }
-
+    /**
+     * puts all pieces on the chessboard into an ArrayList
+     */
     public void updateAllPieces() {
         allPieces.clear();
         for (int r = 0; r < 8; r++) {
@@ -368,136 +315,6 @@ public class Board {
 //        //TODO: Implement this: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
 //        return null;
 //    }
-
-    public String getPosition() {
-        String fen = "";
-        for (int r = 0; r < 8; r++) {
-            int noPiece = 0;
-            for (int c = 0; c < 8; c++) {
-                Piece piece = getPiece(r, c);
-                if (piece == null) {
-                    noPiece++;
-                } else {
-                    if (noPiece != 0) {
-                        fen += noPiece;
-                        noPiece = 0;
-                    }
-                    fen += piece.getCode();
-                }
-            }
-            if (noPiece != 0) {
-                fen += noPiece;
-            }
-            if (r != 7) {
-                fen += "/";
-            }
-        }
-        fen += " ";
-        fen += whitesTurn ? 'w' : 'b';
-        fen += " ";
-        fen += whiteCastlingShort ? 'K' : "";
-        fen += whiteCastlingLong ? 'Q' : "";
-        fen += blackCastlingShort ? 'k' : "";
-        fen += blackCastlingLong ? 'q' : "";
-        if (!(whiteCastlingShort || whiteCastlingLong || blackCastlingShort || blackCastlingLong)) {
-            fen += "-";
-        }
-        fen += " ";
-        fen += enPassant;
-
-        return fen;
-    }
-
-
-    public void setPosition(String fen) {
-        // sample fen looks like this:
-        // rnbqkbnr/p1p1p1pp/1p3P2/5p2/2P5/3p4/PP1P1PPP/RNBQKBNR w KQkq -
-
-        clearBoard();
-        resetSpecialMoves();
-        String[] fenGroup = fen.split(" ");
-
-        // first group
-        String[] fenRows = fenGroup[0].split("/");
-        for (int r = 0; r < 8; r++) {
-            String row = fenRows[r];
-            char[] codes = row.toCharArray();
-            int emptySquares = 0;
-            for (int c = 0; c < 8; c++) {
-                char code = codes[c - emptySquares];
-                switch (code) {
-                    case 'p':
-                        chessBoard[r][c] = new Pawn(new Point(r, c), false, this);
-                        break;
-                    case 'n':
-                        chessBoard[r][c] = new Knight(new Point(r, c), false, this);
-                        break;
-                    case 'b':
-                        chessBoard[r][c] = new Bishop(new Point(r, c), false, this);
-                        break;
-                    case 'r':
-                        chessBoard[r][c] = new Rook(new Point(r, c), false, this);
-                        break;
-                    case 'q':
-                        chessBoard[r][c] = new Queen(new Point(r, c), false, this);
-                        break;
-                    case 'k':
-                        chessBoard[r][c] = new King(new Point(r, c), false, this);
-                        break;
-                    case 'P':
-                        chessBoard[r][c] = new Pawn(new Point(r, c), true, this);
-                        break;
-                    case 'N':
-                        chessBoard[r][c] = new Knight(new Point(r, c), true, this);
-                        break;
-                    case 'B':
-                        chessBoard[r][c] = new Bishop(new Point(r, c), true, this);
-                        break;
-                    case 'R':
-                        chessBoard[r][c] = new Rook(new Point(r, c), true, this);
-                        break;
-                    case 'Q':
-                        chessBoard[r][c] = new Queen(new Point(r, c), true, this);
-                        break;
-                    case 'K':
-                        chessBoard[r][c] = new King(new Point(r, c), true, this);
-                        break;
-                    default:
-                        int emptySpace = (int) code - 48;
-                        emptySquares += emptySpace - 1;
-                        c += emptySquares;
-                        break;
-                }
-            }
-        }
-
-        // second group
-        whitesTurn = fenGroup[1].equals("w") ? true : false;
-
-        // third group
-        for (char i : fenGroup[2].toCharArray()) {
-            switch (i) {
-                case 'K':
-                    whiteCastlingShort = true;
-                    break;
-                case 'Q':
-                    whiteCastlingLong = true;
-                    break;
-                case 'k':
-                    blackCastlingShort = true;
-                    break;
-                case 'q':
-                    blackCastlingLong = true;
-                default:
-                    break;
-            }
-        }
-
-        // fourth group
-        enPassant = fenGroup[3];
-
-        setPreliminaryMoves();
-    }
 
 
     /**
@@ -529,9 +346,41 @@ public class Board {
         return moves.get(moves.size() - 1);
     }
 
+
+
+
     //getter and setter
+
+    public Piece[][] getChessBoard() {
+        return chessBoard;
+    }
+
+    public void setChessBoard(Piece[][] chessBoard) {
+        this.chessBoard = chessBoard;
+    }
+
+    public boolean isWhitesTurn() {
+        return whitesTurn;
+    }
+
+    public void setWhitesTurn(boolean whitesTurn) {
+        this.whitesTurn = whitesTurn;
+    }
+
+    public ArrayList<Piece> getAllPieces() {
+        return allPieces;
+    }
+
+    public void setAllPieces(ArrayList<Piece> allPieces) {
+        this.allPieces = allPieces;
+    }
+
     public ArrayList<Move> getMoves() {
         return moves;
+    }
+
+    public void setMoves(ArrayList<Move> moves) {
+        this.moves = moves;
     }
 
     public boolean isWhiteCastlingShort() {
@@ -566,6 +415,11 @@ public class Board {
         this.blackCastlingLong = blackCastlingLong;
     }
 
+    public String getEnPassant() {
+        return enPassant;
+    }
+
+    public void setEnPassant(String enPassant) {
+        this.enPassant = enPassant;
+    }
 }
-
-

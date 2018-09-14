@@ -6,7 +6,7 @@ import model.Point;
  * This class translates numeric coordinates into algebraic chess notation.
  * e.g. (7,0) -> a1
  */
-public class Translator {
+public abstract class Translator {
 
     public static String getAlgebraicNotationRow(int r) {
         return "" + (8 - r);
