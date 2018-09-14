@@ -2,9 +2,9 @@ package model;
 
 import model.pieces.*;
 
-public abstract class Fen {
+public abstract class FEN {
 
-    public static String getPosition(Board board){
+    public static String createFen(Board board){
         String fen = "";
         for (int r = 0; r < 8; r++) {
             int noPiece = 0;

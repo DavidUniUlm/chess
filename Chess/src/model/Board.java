@@ -65,7 +65,7 @@ public class Board {
     public void setPositionFromFen(String fen) {
         clearBoard();                              // only in case something goes wrong
         resetSpecialMoves();                       // only in case something goes wrong
-        Fen.setPosition(this, fen);
+        FEN.setPosition(this, fen);
         setPreliminaryMoves();
     }
 
@@ -74,7 +74,7 @@ public class Board {
      * @return the fen notation of the recent position
      */
     public String getPositionAsFen() {
-        return Fen.getPosition(this);
+        return FEN.createFen(this);
     }
 
 
@@ -110,6 +110,7 @@ public class Board {
     }
 
     /**
+     * only use if preliminary moves have been determined before.
      * all illegal moves are removed from preliminary determined moves
      */
     public void setLegalMoves() {
@@ -121,6 +122,11 @@ public class Board {
         }
     }
 
+    /**
+     * finds and returns the King of a specified color
+     * @param white
+     * @return
+     */
     public Piece getKing(boolean white) {
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
@@ -140,6 +146,93 @@ public class Board {
             }
         }
         return null;
+    }
+
+
+    /**
+     *
+     * @param start
+     * @param destination
+     * @param specialMove
+     * @param notation
+     */
+    public void saveMove(Point start, Point destination, SpecialMove specialMove, String notation) {
+        int counter = getLastMove() == null ? 1 : getLastMove().getCounter() + 1;
+        String addToNotation = "";
+        if (counter % 2 != 0) { // white move
+            addToNotation = "" + ((counter + 1) / 2) + ".";
+        }
+        notation = addToNotation + notation;
+        moves.add(new Move(start, destination, specialMove, notation, getPositionAsFen(), allPieces, counter));
+    }
+
+
+
+    /**
+     * prints the board to console
+     */
+    public void printBoard() {
+        for (Piece[] row : chessBoard) {
+            for (Piece column : row) {
+                if (column != null) {
+                    System.out.print(column.getCode() + " ");
+                } else {
+                    System.out.print("- ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    /**
+     * puts all pieces on the chessboard into an ArrayList
+     */
+    public void updateAllPieces() {
+        allPieces.clear();
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece piece = chessBoard[r][c];
+                if (piece != null) {
+                    allPieces.add(piece);
+                }
+            }
+        }
+    }
+
+//    public String getPGN() {
+//        //TODO: Implement this: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
+//        return null;
+//    }
+
+
+    /**
+     * removes all the pieces from the chessboard
+     */
+    public void clearBoard() {
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                chessBoard[r][c] = null;
+            }
+        }
+    }
+
+    /**
+     * sets all special moves to default which means none of them is possible
+     */
+    public void resetSpecialMoves() {
+        whiteCastlingShort = false;
+        whiteCastlingLong = false;
+        blackCastlingShort = false;
+        blackCastlingLong = false;
+        enPassant = "-";
+    }
+
+    public Move getLastMove() {
+        if (moves.isEmpty()) {
+            return null;
+        }
+        return moves.get(moves.size() - 1);
     }
 
     /**
@@ -266,87 +359,6 @@ public class Board {
             whiteCastlingShort = false;
         }
     }
-
-    public void saveMove(Point start, Point destination, SpecialMove specialMove, String notation) {
-        int counter = getLastMove() == null ? 1 : getLastMove().getCounter() + 1;
-        String addToNotation = "";
-        if (counter % 2 != 0) { // white move
-            addToNotation = "" + ((counter + 1) / 2) + ".";
-        }
-        notation = addToNotation + notation;
-        moves.add(new Move(start, destination, specialMove, notation, getPositionAsFen(), allPieces, counter));
-    }
-
-
-
-    /**
-     * prints the board to console
-     */
-    public void printBoard() {
-        for (Piece[] row : chessBoard) {
-            for (Piece column : row) {
-                if (column != null) {
-                    System.out.print(column.getCode() + " ");
-                } else {
-                    System.out.print("- ");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
-    /**
-     * puts all pieces on the chessboard into an ArrayList
-     */
-    public void updateAllPieces() {
-        allPieces.clear();
-        for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                Piece piece = chessBoard[r][c];
-                if (piece != null) {
-                    allPieces.add(piece);
-                }
-            }
-        }
-    }
-
-//    public String getPGN() {
-//        //TODO: Implement this: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
-//        return null;
-//    }
-
-
-    /**
-     * removes all the pieces from the chessboard
-     */
-    public void clearBoard() {
-        for (int r = 0; r < 8; r++) {
-            for (int c = 0; c < 8; c++) {
-                chessBoard[r][c] = null;
-            }
-        }
-    }
-
-    /**
-     * sets all special moves to default which means none of them is possible
-     */
-    public void resetSpecialMoves() {
-        whiteCastlingShort = false;
-        whiteCastlingLong = false;
-        blackCastlingShort = false;
-        blackCastlingLong = false;
-        enPassant = "-";
-    }
-
-    public Move getLastMove() {
-        if (moves.isEmpty()) {
-            return null;
-        }
-        return moves.get(moves.size() - 1);
-    }
-
-
 
 
     //getter and setter
