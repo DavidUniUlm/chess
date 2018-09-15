@@ -3,6 +3,11 @@ package view;
 import controller.Controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.FlowPane;
 import model.Point;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -54,17 +59,43 @@ public class ChessGuiController {
     @FXML
     private TextFlow movesTextFlow;
 
+    @FXML
+    private FlowPane flowPane;
+
     public void showNotation(ArrayList<Move> moves) {
-        movesTextFlow.getChildren().clear();
+        flowPane.getChildren().clear();
         for (int i = 0; i < moves.size(); i++) {
-            Text text = new Text(moves.get(i).getNotation() + "  ");
-//            if(i != 0 && i % 2 == 0){
-//                System.out.println("\n");
-//            }
-            movesTextFlow.getChildren().add(text);
+            Label label = new Label(" " + moves.get(i).getNotation() + " ");
+            label.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    label.setStyle("-fx-background-color: #ebd6e6");
+                }
+            });
+            label.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    label.setStyle("-fx-opacity: 1");
+                }
+            });
+            label.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    label.setStyle("-fx-background-color: #c487b6");
+                }
+            });
+            label.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    label.setStyle("-fx-background-color: #ebd6e6");
+                    System.err.println("Jetzt neue Stellung aufbauen!");
+                }
+            });
 
+            flowPane.getChildren().add(label);
         }
-
+        // color last move
+        flowPane.getChildren().get(flowPane.getChildren().size()-1).setStyle("-fx-background-color: #cccccc");
     }
 
     EventHandler<MouseEvent> onBoardClicked = new EventHandler<MouseEvent>() {

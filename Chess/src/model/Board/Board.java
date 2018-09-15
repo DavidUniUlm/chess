@@ -21,6 +21,7 @@ public class Board {
     private boolean blackCastlingLong;
     private String enPassant = "-";
 
+
     /**
      * deep clones any Object.
      * see also https://github.com/kostaskougios/cloning
@@ -32,6 +33,7 @@ public class Board {
         Board boardCopy = cloner.deepClone(this);
         return boardCopy;
     }
+
 
     /**
      * checks if a position is legal or if the king can be taken
@@ -59,8 +61,8 @@ public class Board {
         printBoard();
     }
 
+
     /**
-     *
      * @param fen
      */
     public void setPositionFromFen(String fen) {
@@ -70,8 +72,8 @@ public class Board {
         setPreliminaryMoves();
     }
 
+
     /**
-     *
      * @return the fen notation of the recent position
      */
     public String getPositionAsFen() {
@@ -88,6 +90,12 @@ public class Board {
         return (chessBoard[r][c]);
     }
 
+
+    /**
+     *
+     * @param square
+     * @return
+     */
     public Piece getPiece(Point square) {
         return getPiece(square.getX(), square.getY());
     }
@@ -100,6 +108,7 @@ public class Board {
         return false;
     }
 
+
     /**
      * these are temporary moves that also contain illegal moves into check
      */
@@ -109,6 +118,7 @@ public class Board {
             piece.calculatePreliminaryMoves();
         }
     }
+
 
     /**
      * only use if preliminary moves have been determined before.
@@ -123,8 +133,10 @@ public class Board {
         }
     }
 
+
     /**
      * finds and returns the King of a specified color
+     *
      * @param white
      * @return
      */
@@ -168,7 +180,6 @@ public class Board {
     }
 
 
-
     /**
      * prints the board to console
      */
@@ -186,6 +197,7 @@ public class Board {
         System.out.println();
     }
 
+
     /**
      * puts all pieces on the chessboard into an ArrayList
      */
@@ -200,6 +212,7 @@ public class Board {
             }
         }
     }
+
 
 //    public String getPGN() {
 //        //TODO: Implement this: http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm
@@ -218,6 +231,7 @@ public class Board {
         }
     }
 
+
     /**
      * sets all special moves to default which means none of them is possible
      */
@@ -229,12 +243,17 @@ public class Board {
         enPassant = "-";
     }
 
+
+    /**
+     * @return
+     */
     public Move getLastMove() {
         if (moves.isEmpty()) {
             return null;
         }
         return moves.get(moves.size() - 1);
     }
+
 
     /**
      * move a piece from a starting square to a destination square.
@@ -249,8 +268,8 @@ public class Board {
     }
 
 
-    //getter and setter
 
+    //getter and setter
     public Piece[][] getChessBoard() {
         return chessBoard;
     }
