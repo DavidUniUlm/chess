@@ -170,7 +170,7 @@ public class Board {
      * @param notation
      */
     public void saveMove(Point start, Point destination, SpecialMove specialMove, String notation) {
-        int counter = getLastMove() == null ? 1 : getLastMove().getCounter() + 1;
+        int counter = getLastMove() == null ? 1 : getLastMove().getMoveNumber() + 1;
         String addToNotation = "";
         if (counter % 2 != 0) { // white move
             addToNotation = "" + ((counter + 1) / 2) + ".";

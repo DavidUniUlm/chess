@@ -43,7 +43,6 @@ public class ChessGuiController {
     HashMap<Point, Rectangle> coloredSquares = new HashMap<>();
     HashMap<Point, Rectangle> pieces = new HashMap<>();
 
-
     @FXML
     private GridPane board;
 
@@ -65,7 +64,9 @@ public class ChessGuiController {
     public void showNotation(ArrayList<Move> moves) {
         flowPane.getChildren().clear();
         for (int i = 0; i < moves.size(); i++) {
-            Label label = new Label(" " + moves.get(i).getNotation() + " ");
+            Move move = moves.get(i);
+            Label label = new Label(" " + move.getNotation() + " ");
+
             label.setOnMouseEntered(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -82,21 +83,23 @@ public class ChessGuiController {
                 @Override
                 public void handle(MouseEvent event) {
                     label.setStyle("-fx-background-color: #c487b6");
+                    controller.onNotationClicked(move);
                 }
             });
-            label.setOnMouseReleased(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    label.setStyle("-fx-background-color: #ebd6e6");
-                    System.err.println("Jetzt neue Stellung aufbauen!");
-                }
-            });
+//            label.setOnMouseReleased(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    label.setStyle("-fx-background-color: #ebd6e6");
+//                    System.err.println("Jetzt neue Stellung aufbauen!");
+//                }
+//            });
 
             flowPane.getChildren().add(label);
         }
         // color last move
-        flowPane.getChildren().get(flowPane.getChildren().size()-1).setStyle("-fx-background-color: #cccccc");
+        flowPane.getChildren().get(flowPane.getChildren().size() - 1).setStyle("-fx-background-color: #cccccc");
     }
+
 
     EventHandler<MouseEvent> onBoardClicked = new EventHandler<MouseEvent>() {
         @Override

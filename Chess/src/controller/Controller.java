@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 
 public class Controller {
 
@@ -31,6 +32,11 @@ public class Controller {
         } else {
             handleSecondClick(r, c);
         }
+    }
+
+    public void onNotationClicked(Move move){
+        board.setPositionFromFen(move.getFen());
+        chessGuiController.setPosition(board.getChessBoard());
     }
 
 

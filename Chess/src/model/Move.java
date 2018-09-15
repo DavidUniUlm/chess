@@ -1,30 +1,29 @@
 package model;
 
-import model.Point;
-import javafx.scene.control.Label;
 import model.pieces.Piece;
 import view.SpecialMove;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Move {
 
-    private boolean whitePiece;
+    private boolean whitePlayer;
     private Point start;
     private Point destination;
     private String notation;
     private SpecialMove specialMove;
     private String fen;
-    private int counter;
+    private int moveNumber;
 
-    public Move(Point start, Point destination, SpecialMove specialMove, String notation, String fen, ArrayList<Piece> allPieces, int counter) {
+    public Move(Point start, Point destination, SpecialMove specialMove, String notation, String fen, ArrayList<Piece> allPieces, int moveNumber) {
         this.start = start;
         this.destination = destination;
         this.specialMove = specialMove;
         this.notation = notation;
         this.fen = fen;
-        this.counter = counter;
+        this.moveNumber = moveNumber;
         setNotation(allPieces);
     }
 
@@ -53,12 +52,12 @@ public class Move {
 
     // getter and setter
 
-    public boolean isWhitePiece() {
-        return whitePiece;
+    public boolean isWhitePlayer() {
+        return whitePlayer;
     }
 
-    public void setWhitePiece(boolean whitePiece) {
-        this.whitePiece = whitePiece;
+    public void setWhitePlayer(boolean whitePlayer) {
+        this.whitePlayer = whitePlayer;
     }
 
     public Point getStart() {
@@ -97,11 +96,11 @@ public class Move {
         this.fen = fen;
     }
 
-    public int getCounter() {
-        return counter;
+    public int getMoveNumber() {
+        return moveNumber;
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
+    public void setMoveNumber(int moveNumber) {
+        this.moveNumber = moveNumber;
     }
 }
