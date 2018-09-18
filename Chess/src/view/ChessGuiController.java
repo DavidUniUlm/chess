@@ -1,12 +1,11 @@
 package view;
 
 import controller.Controller;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.FlowPane;
 import model.Point;
 import javafx.scene.input.MouseEvent;
@@ -16,8 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.control.MenuBar;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import model.Move;
 import model.pieces.Piece;
 import model.pieces.Type;
@@ -50,16 +47,25 @@ public class ChessGuiController {
     private MenuBar menuBar;
 
     @FXML
+    private MenuItem newGameMenuItem;
+
+    @FXML
     private Pane frame; // a frame around the chessboard
 
     /**
      * display moves here
      */
     @FXML
-    private TextFlow movesTextFlow;
+    private FlowPane flowPane;
 
     @FXML
-    private FlowPane flowPane;
+    void newGameAction(ActionEvent event) {
+        controller.onNewGameButtonClicked();
+    }
+
+    public void clearNotation(){
+        flowPane.getChildren().clear();
+    }
 
     public void showNotation(ArrayList<Move> moves) {
         flowPane.getChildren().clear();

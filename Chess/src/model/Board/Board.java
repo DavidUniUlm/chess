@@ -69,6 +69,7 @@ public class Board {
         clearBoard();                              // only in case something goes wrong
         resetSpecialMoves();                       // only in case something goes wrong
         FEN.setPosition(this, fen);
+        updateAllPieces();
         setPreliminaryMoves();
     }
 
@@ -267,7 +268,9 @@ public class Board {
         MoveHandler.move(this, start, destination);
     }
 
-
+    public void clearMoves() {
+        moves.clear();
+    }
 
     //getter and setter
     public Piece[][] getChessBoard() {
@@ -341,4 +344,6 @@ public class Board {
     public void setEnPassant(String enPassant) {
         this.enPassant = enPassant;
     }
+
+
 }

@@ -7,7 +7,7 @@ import view.SpecialMove;
 
 import java.util.ArrayList;
 
-public abstract class Notation {
+public final class Notation {
 
     public static String createNotation(ArrayList<Piece> allPieces, Piece pieceMoved, Piece pieceTaken, Point start, Point destination,
                                         SpecialMove specialMove, String promotion){

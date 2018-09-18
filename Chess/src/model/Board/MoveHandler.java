@@ -11,7 +11,7 @@ import view.SpecialMove;
 /**
  * performes a move
  */
-public abstract class MoveHandler {
+public final class MoveHandler {
 
     /**
      * move a piece from a starting square to a destination square.

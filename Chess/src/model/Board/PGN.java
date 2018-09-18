@@ -1,4 +1,4 @@
 package model.Board;
 
-public abstract class PGN {
+public final class PGN {
 }

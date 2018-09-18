@@ -129,4 +129,11 @@ public class Controller {
         this.chessGuiController = chessGuiController;
     }
 
+    public void onNewGameButtonClicked() {
+        board.clearMoves();
+        board.setNewGame();
+        chessGuiController.clearNotation();
+        chessGuiController.setPosition(board.getChessBoard());
+
+    }
 }
